@@ -39,7 +39,6 @@ Chào mừng bạn đến với **Ghi Chú**, một ứng dụng web ghi chú c�
 
 👉 **[BẤM VÀO ĐÂY ĐỂ MỞ ỨNG DỤNG](https://duongvantrong18102012-cmd.github.io/sketch-notes/)**
 
-*(Lưu ý: Nếu link trên chưa hoạt động, hãy vào phần **Settings** > **Pages** > chọn nhánh `main` và bấm **Save** để kích hoạt).*
 
 ---
 
