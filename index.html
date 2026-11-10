@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>GHI CHÚ — Sổ phác thảo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,600;0,700;1,400&family=Space+Mono:wght@700&display=swap" rel="stylesheet" />
+<style>
+  /* ============================================================
+     MONOCHROME SKETCH BRUTALISM
+     đen / trắng / xám nhạt · giấy vẽ · nét mực · bóng đổ cứng
+     ============================================================ */
+
+  *, *::before, *::after { box-sizing: border-box; }
+
+  :root {
+    --ink: #141414;
+    --ink-2: #4a4a4a;
+    --ink-3: #8a8a84;
+    --paper: #fcfcfa;
+    --paper-2: #f0f0ec;
+    --line: #d9d9d3;
+    --mono: 'IBM Plex Mono', 'Courier New', Courier, monospace;
+    --display: 'Space Mono', 'IBM Plex Mono', 'Courier New', monospace;
+  }
+
+  html { -webkit-text-size-adjust: 100%; }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: var(--mono);
+    font-size: 15px;
+    line-height: 1.55;
+    color: var(--ink);
+    background-color: var(--paper);
+    /* lưới giấy mảnh */
+    background-image:
+      linear-gradient(to right, rgba(20,20,20,.055) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(20,20,20,.055) 1px, transparent 1px);
+    background-size: 26px 26px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* hạt giấy / nhiễu mực in */
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    pointer-events: none;
+    opacity: .38;
+    mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.22'/%3E%3C/svg%3E");
+  }
+
+  ::selection { background: var(--ink); color: var(--paper); }
+
+  ::-webkit-scrollbar { width: 12px; height: 12px; }
+  ::-webkit-scrollbar-track { background: var(--paper-2); }
+  ::-webkit-scrollbar-thumb { background: var(--ink); border: 3px solid var(--paper-2); }
+
+  .wrap {
+    position: relative;
+    z-index: 1;
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 40px 22px 64px;
+  }
+
+  /* ---------------- MASTHEAD ---------------- */
+
+  .masthead {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 22px;
+    padding-bottom: 16px;
+    border-bottom: 3px solid var(--ink);
+    margin-bottom: 26px;
+  }
+
+  .title {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: clamp(30px, 7vw, 52px);
+    line-height: .95;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    margin: 0;
+  }
+
+  .squiggle {
+    display: block;
+    width: min(320px, 64%);
+    height: 14px;
+    margin-top: 10px;
+    overflow: visible;
+    color: var(--ink);
+  }
+  .squiggle path {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 3.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    vector-effect: non-scaling-stroke;
+  }
+
+  .tagline {
+    margin: 10px 0 0;
+    font-size: 11px;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: var(--ink-2);
+  }
+
+  .stamp {
+    border: 2px solid var(--ink);
+    background: #fff;
+    box-shadow: 4px 4px 0 var(--ink);
+    padding: 8px 16px 7px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 100px;
+    transform: rotate(-1.4deg);
+  }
+  .stamp__num {
+    font-family: var(--display);
+    font-size: 26px;
+    line-height: 1;
+    letter-spacing: .02em;
+  }
+  .stamp__lbl {
+    font-size: 9px;
+    letter-spacing: .26em;
+    text-transform: uppercase;
+    color: var(--ink-2);
+    margin-top: 4px;
+  }
+
+  /* ---------------- TOOLBAR ---------------- */
+
+  .toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-bottom: 32px;
+  }
+
+  .field {
+    flex: 1 1 260px;
+    min-width: 0;
+    font-family: var(--mono);
+    font-size: 14px;
+    color: var(--ink);
+    background: #fff;
+    border: 2px solid var(--ink);
+    border-radius: 0;
+    padding: 11px 14px;
+    box-shadow: 4px 4px 0 var(--ink);
+    outline: none;
+    appearance: none;
+    -webkit-appearance: none;
+    transition: transform .1s ease, box-shadow .1s ease;
+  }
+  .field::placeholder { color: #a5a59e; letter-spacing: .06em; }
+  .field:focus { transform: translate(-1px, -1px); box-shadow: 6px 6px 0 var(--ink); }
+  .field::-webkit-search-cancel-button { -webkit-appearance: none; appearance: none; }
+
+  /* ---------------- BUTTONS ---------------- */
+
+  .btn {
+    font-family: var(--mono);
+    font-weight: 600;
+    font-size: 12px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--ink);
+    background: #fff;
+    border: 2px solid var(--ink);
+    border-radius: 0;
+    padding: 11px 18px;
+    cursor: pointer;
+    box-shadow: 4px 4px 0 var(--ink);
+    transition: transform .07s ease, box-shadow .07s ease, background .12s ease, color .12s ease;
+    user-select: none;
+    white-space: nowrap;
+  }
+  .btn:hover { background: var(--paper-2); }
+  .btn:active { transform: translate(4px, 4px); box-shadow: 0 0 0 var(--ink); }
+  .btn:focus-visible { outline: 2px dashed var(--ink); outline-offset: 3px; }
+
+  .btn--solid { background: var(--ink); color: var(--paper); }
+  .btn--solid:hover { background: #000; }
+
+  .btn--icon {
+    padding: 3px 9px 4px;
+    font-size: 14px;
+    line-height: 1;
+    letter-spacing: 0;
+    box-shadow: 2px 2px 0 var(--ink);
+  }
+  .btn--icon:active { transform: translate(2px, 2px); box-shadow: 0 0 0 var(--ink); }
+
+  /* ---------------- GRID ---------------- */
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 24px;
+    align-items: start;
+  }
+
+  .card {
+    position: relative;
+    background: #fff;
+    border: 2px solid var(--ink);
+    box-shadow: 6px 6px 0 var(--ink);
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-height: 182px;
+    cursor: pointer;
+    transform: rotate(var(--rot, 0deg));
+    transition: transform .12s ease, box-shadow .12s ease;
+    text-align: left;
+  }
+  .card:hover {
+    transform: rotate(var(--rot, 0deg)) translate(-3px, -3px);
+    box-shadow: 9px 9px 0 var(--ink);
+  }
+  .card:active {
+    transform: rotate(var(--rot, 0deg)) translate(2px, 2px);
+    box-shadow: 2px 2px 0 var(--ink);
+  }
+  .card:focus-visible { outline: 2px dashed var(--ink); outline-offset: 4px; }
+
+  .card__title {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 17px;
+    line-height: 1.28;
+    letter-spacing: .01em;
+    margin: 0;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--ink);
+    word-break: break-word;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .card__body {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--ink-2);
+    white-space: pre-wrap;
+    word-break: break-word;
+    flex: 1;
+    display: -webkit-box;
+    -webkit-line-clamp: 5;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .card__foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-top: auto;
+    padding-top: 10px;
+    border-top: 1px dashed #bdbdb6;
+  }
+
+  .card__date {
+    font-size: 9.5px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    white-space: nowrap;
+  }
+
+  .card__del {
+    font-family: var(--mono);
+    font-size: 9.5px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    background: transparent;
+    color: var(--ink);
+    border: 2px solid var(--ink);
+    border-radius: 0;
+    padding: 3px 8px;
+    cursor: pointer;
+    box-shadow: 2px 2px 0 var(--ink);
+    transition: transform .07s ease, box-shadow .07s ease, background .1s ease, color .1s ease;
+  }
+  .card__del:hover { background: var(--ink); color: #fff; }
+  .card__del:active { transform: translate(2px, 2px); box-shadow: 0 0 0 var(--ink); }
+
+  /* ---------------- EMPTY ---------------- */
+
+  .empty {
+    grid-column: 1 / -1;
+    border: 2px dashed var(--ink);
+    background: rgba(255,255,255,.72);
+    padding: 62px 24px;
+    text-align: center;
+    transform: rotate(-.3deg);
+  }
+  .empty__big {
+    font-family: var(--display);
+    font-size: 20px;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    margin: 0 0 10px;
+  }
+  .empty p { margin: 0; font-size: 13px; color: var(--ink-2); }
+
+  /* ---------------- FOOTER ---------------- */
+
+  .foot {
+    margin-top: 52px;
+    padding-top: 16px;
+    border-top: 2px solid var(--ink);
+    font-size: 10.5px;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+
+  /* ---------------- OVERLAY / EDITOR ---------------- */
+
+  .overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    display: none;
+    padding: 24px 18px 60px;
+    overflow-y: auto;
+    background-color: rgba(20, 20, 20, .42);
+    background-image: repeating-linear-gradient(45deg, rgba(255,255,255,.07) 0 2px, transparent 2px 7px);
+  }
+  .overlay.open { display: block; }
+
+  .editor {
+    width: min(760px, 100%);
+    margin: 0 auto;
+    background: #fff;
+    border: 3px solid var(--ink);
+    box-shadow: 12px 12px 0 var(--ink);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    animation: stamp-in .15s ease-out;
+  }
+
+  @keyframes stamp-in {
+    from { transform: translate(7px, 7px); box-shadow: 0 0 0 var(--ink); opacity: .35; }
+    to   { transform: translate(0, 0);     box-shadow: 12px 12px 0 var(--ink); opacity: 1; }
+  }
+
+  .editor__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--ink);
+  }
+
+  .editor__label {
+    font-size: 10.5px;
+    letter-spacing: .26em;
+    text-transform: uppercase;
+    color: var(--ink-2);
+  }
+
+  .editor__title {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 22px;
+    color: var(--ink);
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid var(--ink);
+    border-radius: 0;
+    padding: 6px 2px 8px;
+    width: 100%;
+    outline: none;
+  }
+  .editor__title::placeholder { color: #b6b6ae; }
+
+  .editor__body {
+    font-family: var(--mono);
+    font-size: 14px;
+    line-height: 1.75;
+    color: var(--ink);
+    background: #fff;
+    border: 2px solid var(--ink);
+    border-radius: 0;
+    padding: 12px;
+    min-height: 300px;
+    width: 100%;
+    resize: vertical;
+    outline: none;
+  }
+  .editor__body::placeholder { color: #b6b6ae; }
+  .editor__body:focus { box-shadow: inset 0 0 0 2px rgba(20,20,20,.08); }
+
+  .editor__foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding-top: 14px;
+    border-top: 2px solid var(--ink);
+  }
+
+  .counter {
+    font-size: 10.5px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+
+  .editor__actions { display: flex; gap: 10px; }
+
+  /* ---------------- CONFIRM ---------------- */
+
+  #confirm { z-index: 60; }
+  .confirm {
+    width: min(430px, 100%);
+    margin-top: 16vh;
+    box-shadow: 10px 10px 0 var(--ink);
+  }
+  .confirm__text {
+    font-family: var(--display);
+    font-size: 18px;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    margin: 0;
+  }
+  .confirm__sub {
+    margin: 0;
+    font-size: 12.5px;
+    color: var(--ink-2);
+  }
+  .confirm__actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding-top: 12px;
+    border-top: 2px solid var(--ink);
+  }
+
+  /* ---------------- RESPONSIVE ---------------- */
+
+  @media (max-width: 560px) {
+    .wrap { padding: 26px 14px 44px; }
+    .stamp { transform: none; }
+    .grid { gap: 18px; }
+    .btn { padding: 10px 14px; }
+    .editor { padding: 16px; box-shadow: 8px 8px 0 var(--ink); }
+    .overlay { padding: 16px 12px 48px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <header class="masthead">
+    <div>
+      <h1 class="title">Ghi Chú</h1>
+      <svg class="squiggle" viewBox="0 0 320 14" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M3 9 C 45 2, 80 12, 120 7 S 200 2, 250 9 S 295 4, 317 7" />
+      </svg>
+      <p class="tagline">sổ phác thảo &nbsp;//&nbsp; lưu cục bộ trên máy</p>
+    </div>
+    <div class="stamp" aria-hidden="true">
+      <span id="count" class="stamp__num">00</span>
+      <span class="stamp__lbl">ghi chú</span>
+    </div>
+  </header>
+
+  <div class="toolbar">
+    <input id="search" class="field" type="search" placeholder="tìm trong ghi chú…" autocomplete="off" aria-label="Tìm kiếm ghi chú" />
+    <button id="newBtn" class="btn btn--solid" type="button">+ Ghi chú mới</button>
+  </div>
+
+  <main id="grid" class="grid"></main>
+
+  <footer class="foot">■ dữ liệu được lưu trong localStorage của trình duyệt</footer>
+
+</div>
+
+<!-- ============ EDITOR ============ -->
+<div id="overlay" class="overlay" role="dialog" aria-modal="true" aria-label="Trình soạn ghi chú">
+  <div class="editor">
+    <div class="editor__head">
+      <span class="editor__label">■ soạn thảo</span>
+      <button id="closeBtn" class="btn btn--icon" type="button" aria-label="Đóng">✕</button>
+    </div>
+
+    <input id="titleInput" class="editor__title" type="text" placeholder="tiêu đề…" maxlength="120" />
+    <textarea id="bodyInput" class="editor__body" placeholder="viết gì đó…"></textarea>
+
+    <div class="editor__foot">
+      <span id="counter" class="counter">0 từ · 0 ký tự</span>
+      <div class="editor__actions">
+        <button id="deleteBtn" class="btn" type="button">Xóa</button>
+        <button id="saveBtn" class="btn btn--solid" type="button">Lưu ⌘↵</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ CONFIRM ============ -->
+<div id="confirm" class="overlay" role="dialog" aria-modal="true" aria-label="Xác nhận xóa">
+  <div class="editor confirm">
+    <p class="confirm__text">Xóa ghi chú này?</p>
+    <p class="confirm__sub">Hành động không thể hoàn tác.</p>
+    <div class="confirm__actions">
+      <button id="cancelDel" class="btn" type="button">Hủy</button>
+      <button id="okDel" class="btn btn--solid" type="button">Xóa</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  /* ---------------- CONSTANTS ---------------- */
+  const KEY = 'mono-sketch-notes-v1';
+
+  /* ---------------- DOM ---------------- */
+  const grid       = document.getElementById('grid');
+  const search     = document.getElementById('search');
+  const newBtn     = document.getElementById('newBtn');
+  const countEl    = document.getElementById('count');
+
+  const overlay    = document.getElementById('overlay');
+  const closeBtn   = document.getElementById('closeBtn');
+  const titleInput = document.getElementById('titleInput');
+  const bodyInput  = document.getElementById('bodyInput');
+  const saveBtn    = document.getElementById('saveBtn');
+  const deleteBtn  = document.getElementById('deleteBtn');
+  const counter    = document.getElementById('counter');
+
+  const confirmEl  = document.getElementById('confirm');
+  const okDel      = document.getElementById('okDel');
+  const cancelDel  = document.getElementById('cancelDel');
+
+  /* ---------------- STATE ---------------- */
+  let notes = [];
+  let editingId = null;
+  let pendingDeleteId = null;
+  let query = '';
+
+  /* ---------------- HELPERS ---------------- */
+  function uid() {
+    return Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+  }
+
+  function fmt(ts) {
+    const d = new Date(ts || Date.now());
+    const p = n => String(n).padStart(2, '0');
+    return p(d.getDate()) + '/' + p(d.getMonth() + 1) + '/' + d.getFullYear() +
+           ' · ' + p(d.getHours()) + ':' + p(d.getMinutes());
+  }
+
+  function load() {
+    try {
+      const raw = localStorage.getItem(KEY);
+      const data = raw ? JSON.parse(raw) : [];
+      return Array.isArray(data)
+        ? data.filter(n => n && typeof n === 'object' && n.id)
+        : [];
+    } catch (e) {
+      console.warn('Không đọc được dữ liệu:', e);
+      return [];
+    }
+  }
+
+  function persist() {
+    try {
+      localStorage.setItem(KEY, JSON.stringify(notes));
+    } catch (e) {
+      console.warn('Không ghi được vào localStorage:', e);
+    }
+  }
+
+  /* ---------------- RENDER ---------------- */
+  function render() {
+    const q = query.trim().toLowerCase();
+
+    const list = notes
+      .filter(n => !q ||
+        String(n.title || '').toLowerCase().includes(q) ||
+        String(n.body || '').toLowerCase().includes(q))
+      .sort((a, b) => (b.updated || 0) - (a.updated || 0));
+
+    countEl.textContent = String(notes.length).padStart(2, '0');
+    grid.textContent = '';
+
+    if (!list.length) {
+      const box = document.createElement('div');
+      box.className = 'empty';
+
+      const big = document.createElement('p');
+      big.className = 'empty__big';
+      big.textContent = q ? 'Không tìm thấy' : 'Chưa có ghi chú';
+
+      const sub = document.createElement('p');
+      sub.textContent = q
+        ? 'Thử một từ khóa khác xem sao.'
+        : 'Bấm « GHI CHÚ MỚI » để bắt đầu phác thảo.';
+
+      box.append(big, sub);
+      grid.appendChild(box);
+      return;
+    }
+
+    const rots = ['-0.55deg', '0.35deg', '0deg', '-0.28deg'];
+    const frag = document.createDocumentFragment();
+
+    list.forEach((n, i) => {
+      const card = document.createElement('article');
+      card.className = 'card';
+      card.tabIndex = 0;
+      card.setAttribute('role', 'button');
+      card.style.setProperty('--rot', rots[i % rots.length]);
+      card.dataset.id = n.id;
+
+      const title = document.createElement('h2');
+      title.className = 'card__title';
+      title.textContent = (n.title || '').trim() || 'Không tiêu đề';
+
+      const body = document.createElement('p');
+      body.className = 'card__body';
+      body.textContent = (n.body || '').trim() || '—';
+
+      const foot = document.createElement('div');
+      foot.className = 'card__foot';
+
+      const date = document.createElement('span');
+      date.className = 'card__date';
+      date.textContent = fmt(n.updated);
+
+      const del = document.createElement('button');
+      del.type = 'button';
+      del.className = 'card__del';
+      del.textContent = 'Xóa';
+      del.setAttribute('aria-label', 'Xóa ghi chú');
+      del.addEventListener('click', ev => {
+        ev.stopPropagation();
+        askDelete(n.id);
+      });
+
+      foot.append(date, del);
+      card.append(title, body, foot);
+
+      card.addEventListener('click', () => openEditor(n.id));
+      card.addEventListener('keydown', ev => {
+        if (ev.key === 'Enter' || ev.key === ' ') {
+          ev.preventDefault();
+          openEditor(n.id);
+        }
+      });
+
+      frag.appendChild(card);
+    });
+
+    grid.appendChild(frag);
+  }
+
+  /* ---------------- EDITOR ---------------- */
+  function openEditor(id) {
+    editingId = id || null;
+    const n = id ? notes.find(x => x.id === id) : null;
+
+    titleInput.value = n ? (n.title || '') : '';
+    bodyInput.value  = n ? (n.body  || '') : '';
+    deleteBtn.style.display = id ? '' : 'none';
+
+    overlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+
+    updateCounter();
+    setTimeout(() => titleInput.focus(), 40);
+  }
+
+  function closeEditor() {
+    overlay.classList.remove('open');
+    document.body.style.overflow = '';
+    editingId = null;
+  }
+
+  function commit() {
+    const title = titleInput.value.trim();
+    const body  = bodyInput.value.trim();
+
+    if (!title && !body) { closeEditor(); return; }
+
+    const now = Date.now();
+
+    if (editingId) {
+      const n = notes.find(x => x.id === editingId);
+      if (n) {
+        n.title = title;
+        n.body = body;
+        n.updated = now;
+      }
+    } else {
+      notes.push({
+        id: uid(),
+        title: title,
+        body: body,
+        created: now,
+        updated: now
+      });
+    }
+
+    persist();
+    render();
+    closeEditor();
+  }
+
+  function updateCounter() {
+    const text = bodyInput.value;
+    const words = text.trim() ? text.trim().split(/\s+/).length : 0;
+    counter.textContent = words + ' từ · ' + text.length + ' ký tự';
+  }
+
+  /* ---------------- DELETE ---------------- */
+  function askDelete(id) {
+    pendingDeleteId = id;
+    confirmEl.classList.add('open');
+    okDel.focus();
+  }
+
+  function closeConfirm() {
+    confirmEl.classList.remove('open');
+    pendingDeleteId = null;
+  }
+
+  function deleteNote(id) {
+    notes = notes.filter(n => n.id !== id);
+    persist();
+    if (editingId === id) closeEditor();
+    render();
+  }
+
+  /* ---------------- EVENTS ---------------- */
+  newBtn.addEventListener('click', () => openEditor(null));
+  closeBtn.addEventListener('click', closeEditor);
+  saveBtn.addEventListener('click', commit);
+
+  deleteBtn.addEventListener('click', () => {
+    if (editingId) askDelete(editingId);
+  });
+
+  okDel.addEventListener('click', () => {
+    const id = pendingDeleteId;
+    closeConfirm();
+    if (id) deleteNote(id);
+  });
+
+  cancelDel.addEventListener('click', closeConfirm);
+
+  overlay.addEventListener('mousedown', ev => {
+    if (ev.target === overlay) closeEditor();
+  });
+
+  confirmEl.addEventListener('mousedown', ev => {
+    if (ev.target === confirmEl) closeConfirm();
+  });
+
+  search.addEventListener('input', () => {
+    query = search.value;
+    render();
+  });
+
+  bodyInput.addEventListener('input', updateCounter);
+
+  document.addEventListener('keydown', ev => {
+    /* lớp xác nhận đang mở */
+    if (confirmEl.classList.contains('open')) {
+      if (ev.key === 'Escape') { ev.preventDefault(); closeConfirm(); }
+      return;
+    }
+
+    if (!overlay.classList.contains('open')) {
+      /* phím tắt nhanh khi đang ở danh sách */
+      if ((ev.ctrlKey || ev.metaKey) && ev.key.toLowerCase() === 'k') {
+        ev.preventDefault();
+        search.focus();
+        search.select();
+      }
+      return;
+    }
+
+    if (ev.key === 'Escape') {
+      ev.preventDefault();
+      closeEditor();
+    }
+
+    if ((ev.ctrlKey || ev.metaKey) && ev.key === 'Enter') {
+      ev.preventDefault();
+      commit();
+    }
+  });
+
+  /* ---------------- INIT ---------------- */
+  notes = load();
+  render();
+})();
+</script>
+</body>
+</html>
